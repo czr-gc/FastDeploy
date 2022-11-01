@@ -1,0 +1,38 @@
+name: "ResNet50_vd_infer"
+backend: "fastdeploy"
+
+input [
+  {
+    name: "inputs"
+    data_type: TYPE_FP32
+    dims: [ 3, 224, 224 ]
+  }
+]
+
+output [
+  {
+    name: "save_infer_model/scale_0.tmp_1"
+    data_type: TYPE_FP32
+    dims: [ 1000 ]
+  }
+]
+
+instance_group [
+  {
+    count: 1
+    kind: KIND_CPU
+  }
+]
+
+optimization {
+  execution_accelerators {
+    cpu_execution_accelerator : [
+      {
+        # use openvino backend
+        name: "paddle"
+        parameters { key: "use_ipu" value: "1" }
+      }
+    ]
+  }
+}
+
